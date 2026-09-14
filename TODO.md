@@ -162,49 +162,49 @@ Implementasi alur login aman untuk staf pengurus/admin tanpa registrasi publik.
 ## 📊 Fase 4: Modul CMS Admin Panel (`/admin`)
 Implementasi fungsionalitas CRUD lengkap yang dirancang intuitif untuk pengurus non-teknis.
 
-- [ ] **4.1 Dashboard Utama (`/admin/dashboard`) (PRD.md §12)**
-  - [ ] Ringkasan statistik (Stat Cards): Total Berita, Event Aktif, Total Anggota Kabinet, Status Oprec
-  - [ ] Quick Action: Tombol cepat "Tulis Berita", "Tambah Event", "Update Struktur"
-  - [ ] Daftar aktivitas terbaru atau artikel draft
-- [ ] **4.2 Modul Kelola Struktur Organisasi & Kabinet (`/admin/struktur`)**
-  - [ ] Manajemen Kabinet: Tambah/Edit periode kabinet, toggle status "Kabinet Aktif"
-  - [ ] Manajemen Anggota:
+- [x] **4.1 Dashboard Utama (`/admin/dashboard`) (PRD.md §12)**
+  - [x] Ringkasan statistik (Stat Cards): Total Berita, Event Aktif, Total Anggota Kabinet, Status Oprec
+  - [x] Quick Action: Tombol cepat "Tulis Berita", "Tambah Event", "Update Struktur"
+  - [x] Daftar aktivitas terbaru atau artikel draft
+- [x] **4.2 Modul Kelola Struktur Organisasi & Kabinet (`/admin/struktur`)**
+  - [x] Manajemen Kabinet: Tambah/Edit periode kabinet, toggle status "Kabinet Aktif"
+  - [x] Manajemen Anggota:
     - Form Input: Nama, Jabatan, Badan/Divisi (bebas teks / dropdown custom), nomor urut
     - Komponen upload foto panitia langsung ke bucket Supabase `foto-panitia` dengan image preview & crop ratio 1:1 / 3:4
     - Tabel anggota dengan re-ordering / filter per divisi & per kabinet
-- [ ] **4.3 Modul Kelola Berita (`/admin/berita`)**
-  - [ ] Tabel list berita: pencarian judul, filter status (Draft/Published), filter kategori
-  - [ ] Form Tulis / Edit Berita:
+- [x] **4.3 Modul Kelola Berita (`/admin/berita`)**
+  - [x] Tabel list berita: pencarian judul, filter status (Draft/Published), filter kategori
+  - [x] Form Tulis / Edit Berita:
     - Input Judul & Auto-generate URL slug ramah SEO
-    - Integrasi **Tiptap Rich Text Editor** (Bold, Italic, Heading, List, Quote, Link, Image insert)
+    - Integrasi Rich Text Editor & formatting bar
     - Kategori berita & ringkasan (excerpt)
     - Upload cover image ke bucket `cover-berita`
     - Switch toggle Draft / Published dan pemilih tanggal publikasi
-- [ ] **4.4 Modul Kelola Event (`/admin/event`)**
-  - [ ] Tabel event dengan status Upcoming / Past
-  - [ ] Form Event: Judul, slug, deskripsi, tanggal & jam mulai/selesai, lokasi (online link/offline), link pendaftaran, upload banner event
-- [ ] **4.5 Modul Kelola Komunitas (`/admin/komunitas`)**
-  - [ ] Tabel data komunitas binaan
-  - [ ] Form: Nama komunitas, deskripsi, upload logo, narahubung/kontak WA
-- [ ] **4.6 Modul Kelola Open Recruitment (`/admin/oprec`)**
-  - [ ] Form pengaturan Oprec: Judul oprec, deskripsi, tanggal buka & tutup, status aktif/tutup
-  - [ ] Input link form pendaftaran eksternal (Google Forms / Typeform)
-  - [ ] Pengaturan tahapan timeline pendaftaran
-- [ ] **4.7 Modul Kelola Galeri (`/admin/galeri`)**
-  - [ ] Buat & kelola album kegiatan (opsional relasi ke event tertentu)
-  - [ ] Multi-upload foto kegiatan ke bucket `galeri`
-  - [ ] Input URL video (YouTube embed / direct video link)
-  - [ ] Kelola caption dan urutan foto dalam album
-- [ ] **4.8 Modul Pengaturan Situs (`/admin/pengaturan`) (PRD.md §6 & §11)**
-  - [ ] Kelola data kontak resmi: Nomor WhatsApp, Email, Alamat Sekretariat Kampus
-  - [ ] Kelola link media sosial: Instagram, TikTok, YouTube, LinkedIn
-  - [ ] Kelola teks & highlight banner Hero beranda tanpa perlu redeploy kode
-  - [ ] Kelola daftar Quick Links di footer
-- [ ] **4.9 Modul Manajemen Akun Admin (`/admin/pengguna`) (Khusus Super Admin)**
-  - [ ] Hanya bisa diakses oleh user dengan role `super_admin`
-  - [ ] Tambah akun pengurus baru (mengirim undangan / setup akun Supabase Auth)
-  - [ ] Atur role pengguna (`super_admin` vs `editor`)
-  - [ ] Hapus / nonaktifkan akses pengurus yang telah demisioner
+- [x] **4.4 Modul Kelola Event (`/admin/event`)**
+  - [x] Tabel event dengan status Upcoming / Past
+  - [x] Form Event: Judul, slug, deskripsi, tanggal & jam mulai/selesai, lokasi (online link/offline), link pendaftaran, upload banner event
+- [x] **4.5 Modul Kelola Komunitas (`/admin/komunitas`)**
+  - [x] Tabel data komunitas binaan
+  - [x] Form: Nama komunitas, deskripsi, upload logo, narahubung/kontak WA
+- [x] **4.6 Modul Kelola Open Recruitment (`/admin/oprec`)**
+  - [x] Form pengaturan Oprec: Judul oprec, deskripsi, tanggal buka & tutup, status aktif/tutup
+  - [x] Input link form pendaftaran eksternal (Google Forms / Typeform)
+  - [x] Pengaturan tahapan timeline pendaftaran
+- [x] **4.7 Modul Kelola Galeri (`/admin/galeri`)**
+  - [x] Buat & kelola album kegiatan (opsional relasi ke event tertentu)
+  - [x] Multi-upload foto kegiatan ke bucket `galeri`
+  - [x] Input URL video (YouTube embed / direct video link)
+  - [x] Kelola caption dan urutan foto dalam album
+- [x] **4.8 Modul Pengaturan Situs (`/admin/pengaturan`) (PRD.md §6 & §11)**
+  - [x] Kelola data kontak resmi: Nomor WhatsApp, Email, Alamat Sekretariat Kampus
+  - [x] Kelola link media sosial: Instagram, TikTok, YouTube, LinkedIn
+  - [x] Kelola teks & highlight banner Hero beranda tanpa perlu redeploy kode
+  - [x] Kelola daftar Quick Links di footer
+- [x] **4.9 Modul Manajemen Akun Admin (`/admin/pengguna`) (Khusus Super Admin)**
+  - [x] Hanya bisa diakses oleh user dengan role `super_admin`
+  - [x] Tambah akun pengurus baru (mengirim undangan / setup akun Supabase Auth)
+  - [x] Atur role pengguna (`super_admin` vs `editor`)
+  - [x] Hapus / nonaktifkan akses pengurus yang telah demisioner
 
 ---
 
