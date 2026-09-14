@@ -142,20 +142,20 @@ Implementasi antarmuka publik yang responsif, berestetika tinggi (Yellow & Lime 
 ## 🔒 Fase 3: Sistem Autentikasi & Proteksi Sisi Admin (`(admin)`)
 Implementasi alur login aman untuk staf pengurus/admin tanpa registrasi publik.
 
-- [ ] **3.1 Halaman Login Admin (`/admin/login`) (PRD.md §12)**
-  - [ ] Form email dan password berbasis Supabase Auth
-  - [ ] Validasi form (Zod + React Hook Form)
-  - [ ] Fitur "Lupa Password" / Reset Password via email
-  - [ ] Handling error yang informatif dan state loading yang elegan
-- [ ] **3.2 Middleware Proteksi Rute Admin (`src/middleware.ts`) (PRD.md §8)**
-  - [ ] Intersepsi semua rute di bawah `/admin/*`
-  - [ ] Verifikasi token sesi pengguna melalui Supabase SSR
-  - [ ] Pengecekan tabel `admin_user` untuk validasi status akun aktif & role
-  - [ ] Redirect otomatis ke `/admin/login` jika belum login, dan redirect ke `/admin/dashboard` jika sudah login
-- [ ] **3.3 Layout Dashboard Admin (desain.md §6)**
-  - [ ] Sidebar navigasi (Dark/Light clean slate mode) dengan highlight menu aktif warna Lime Green
-  - [ ] Header admin: Profil pengurus yang login, badge role (Super Admin / Editor), tombol Logout
-  - [ ] Breadcrumbs navigasi per modul
+- [x] **3.1 Halaman Login Admin (`/admin/login`) (PRD.md §12)**
+  - [x] Form email dan password berbasis Supabase Auth
+  - [x] Validasi form (Zod + Server Actions)
+  - [x] Fitur "Lupa Password" / Reset Password via email (`/admin/forgot-password`)
+  - [x] Handling error yang informatif dan state loading yang elegan
+- [x] **3.2 Middleware Proteksi Rute Admin (`src/middleware.ts`) (PRD.md §8)**
+  - [x] Intersepsi semua rute di bawah `/admin/*`
+  - [x] Verifikasi token sesi pengguna melalui Supabase SSR
+  - [x] Pengecekan tabel `admin_user` untuk validasi status akun aktif & role
+  - [x] Redirect otomatis ke `/admin/login` jika belum login, dan redirect ke `/admin/dashboard` jika sudah login
+- [x] **3.3 Layout Dashboard Admin (desain.md §6)**
+  - [x] Sidebar navigasi (Dark clean slate mode) dengan highlight menu aktif warna Lime Green
+  - [x] Header admin: Profil pengurus yang login, badge role (Super Admin / Editor), tombol Logout
+  - [x] Breadcrumbs navigasi per modul
 
 ---
 
