@@ -85,57 +85,57 @@ Implementasi skema PostgreSQL, autentikasi, RLS (Row Level Security), dan Storag
 ## 🌐 Fase 2: Pengembangan Sisi Publik (`(public)`)
 Implementasi antarmuka publik yang responsif, berestetika tinggi (Yellow & Lime Green), cepat (LCP < 2.5s), dan SEO-friendly.
 
-- [ ] **2.1 Layout Publik & Navigasi Global (desain.md §5.1)**
-  - [ ] **Navbar Desktop**: Sticky header dengan efek glassmorphism, logo STIE 66 Kendari, menu navigasi, hover underline kuning, dan CTA Button "Hubungi Kami" (Lime Green)
-  - [ ] **Navbar Mobile**: Drawer/hamburger menu responsif dengan tema kuning cerah STIE 66
-  - [ ] **Footer Global**: Logo, deskripsi singkat, kontak, tautan sosial media, quick links (Useful Links), dan copyright dinamis dari `site_settings`
-- [ ] **2.2 Halaman Beranda / Home (PRD.md §6, desain.md §5.2)**
-  - [ ] **Hero Section**:
+- [x] **2.1 Layout Publik & Navigasi Global (desain.md §5.1)**
+  - [x] **Navbar Desktop**: Sticky header dengan efek glassmorphism, logo STIE 66 Kendari, menu navigasi, hover underline kuning, dan CTA Button "Hubungi Kami" (Lime Green)
+  - [x] **Navbar Mobile**: Drawer/hamburger menu responsif dengan tema kuning cerah STIE 66
+  - [x] **Footer Global**: Logo, deskripsi singkat, kontak, tautan sosial media, quick links (Useful Links), dan copyright dinamis dari `site_settings`
+- [x] **2.2 Halaman Beranda / Home (PRD.md §6, desain.md §5.2)**
+  - [x] **Hero Section**:
     - Tipografi tebal dengan highlight kata kunci berwarna kuning STIE 66
     - Background foto/kegiatan berkualitas dengan gradien overlay gelap
     - Aksi ganda: Tombol "Lihat Program Kerja" (Lime Green) & "Tentang Kami" (Outline)
     - Ornamen aksen geometris dinamis kuning & lime di latar belakang
-  - [ ] **Ringkasan Kilas / Highlight Section**:
+  - [x] **Ringkasan Kilas / Highlight Section**:
     - Statistik singkat (jumlah anggota, program kerja terlaksana, komunitas)
     - Banner Open Recruitment aktif (jika status buka)
-  - [ ] **Preview Berita Terkini**: Grid kartu berita terbaru dengan badge kategori kuning transparan
-  - [ ] **Preview Event Mendatang**: Kartu event dengan penanda tanggal jelas dan badge status
-- [ ] **2.3 Halaman Tentang / Profil (`/tentang`) (PRD.md §6 & §9)**
-  - [ ] Profil Organisasi HIMA STIE 66 Kendari & Sejarah singkat
-  - [ ] Visi & Misi organisasi dengan layout kartu beraksen
-  - [ ] Nilai-nilai organisasi (core values)
-- [ ] **2.4 Halaman Struktur Organisasi (`/struktur`) (PRD.md §6, desain.md §5.3)**
-  - [ ] Tampilan Kabinet Aktif (nama kabinet, filosofi, logo, periode tahun)
-  - [ ] Dropdown/Filter arsip kabinet periode terdahulu (Should Have)
-  - [ ] Pengelompokan per badan/divisi (BPH, Divisi Humas, Divisi Akademik, dll)
-  - [ ] Kartu Anggota: Foto profil rapi, nama font Poppins bold, jabatan aksen Lime Green, dan tautan sosmed
-- [ ] **2.5 Halaman Berita & Artikel (`/berita` & `/berita/[slug]`) (PRD.md §6)**
-  - [ ] **Katalog Berita**: Daftar berita dengan pagination/infinite scroll, filter kategori, kartu berita dengan hover effect
-  - [ ] **Detail Berita**:
+  - [x] **Preview Berita Terkini**: Grid kartu berita terbaru dengan badge kategori kuning transparan
+  - [x] **Preview Event Mendatang**: Kartu event dengan penanda tanggal jelas dan badge status
+- [x] **2.3 Halaman Tentang / Profil (`/tentang`) (PRD.md §6 & §9)**
+  - [x] Profil Organisasi HIMA STIE 66 Kendari & Sejarah singkat
+  - [x] Visi & Misi organisasi dengan layout kartu beraksen
+  - [x] Nilai-nilai organisasi (core values)
+- [x] **2.4 Halaman Struktur Organisasi (`/struktur`) (PRD.md §6, desain.md §5.3)**
+  - [x] Tampilan Kabinet Aktif (nama kabinet, filosofi, logo, periode tahun)
+  - [x] Dropdown/Filter arsip kabinet periode terdahulu (Should Have)
+  - [x] Pengelompokan per badan/divisi (BPH, Divisi Humas, Divisi Akademik, dll)
+  - [x] Kartu Anggota: Foto profil rapi, nama font Poppins bold, jabatan aksen Lime Green, dan tautan sosmed
+- [x] **2.5 Halaman Berita & Artikel (`/berita` & `/berita/[slug]`) (PRD.md §6)**
+  - [x] **Katalog Berita**: Daftar berita dengan pagination/infinite scroll, filter kategori, kartu berita dengan hover effect
+  - [x] **Detail Berita**:
     - Header judul, tanggal rilis, nama author, kategori badge
     - Cover image responsive (`next/image`)
-    - Area baca artikel (styling tipografi ramah pembaca via Tailwind Typography `@tailwindcss/typography`)
+    - Area baca artikel (styling tipografi ramah pembaca)
     - Rekomendasi berita terkait & tombol bagikan (Share to WhatsApp, Twitter, Copy Link)
-- [ ] **2.6 Halaman Event & Kegiatan (`/event` & `/event/[slug]`) (PRD.md §6)**
-  - [ ] Tab pemisah: **Event Mendatang (Upcoming)** vs **Arsip Event (Past)**
-  - [ ] Kartu Event: Cover, badge tanggal, lokasi/link online, status badge (Lime Green = Upcoming, Gray = Past)
-  - [ ] Halaman Detail Event: Jadwal lengkap, detail pembicara/pemateri, lokasi maps/tautan meeting, tombol pendaftaran eksternal/internal
-- [ ] **2.7 Halaman Komunitas (`/komunitas` & `/komunitas/[slug]`) (PRD.md §6)**
-  - [ ] Daftar komunitas minat/bakat di bawah naungan HIMA STIE 66
-  - [ ] Profil komunitas: logo, deskripsi kegiatan, jadwal kumpul, dan kontak narahubung
-- [ ] **2.8 Halaman Open Recruitment (`/oprec`) (PRD.md §6, desain.md §5.4)**
-  - [ ] Hero banner mencolok bertema Yellow STIE 66
-  - [ ] Komponen Countdown / Status aktif pendaftaran
-  - [ ] Timeline tahapan seleksi (alur vertikal dengan dot indicator warna Lime Green)
-  - [ ] Syarat & Ketentuan pendaftaran
-  - [ ] Tombol CTA utama pendaftaran (link ke Google Form atau form pendaftaran)
-- [ ] **2.9 Halaman Galeri Kegiatan (`/galeri`) (PRD.md §6)**
-  - [ ] Grid album dokumentasi kegiatan mahasiswa
-  - [ ] Modal/Lightbox viewer untuk preview foto beresolusi tinggi & embed video kegiatan
-- [ ] **2.10 Halaman Kontak (`/kontak`) (PRD.md §6)**
-  - [ ] Informasi alamat sekretariat kampus STIE 66 Kendari
-  - [ ] Quick click to WhatsApp, Email resmi, dan akun media sosial
-  - [ ] Embed Google Maps lokasi kampus
+- [x] **2.6 Halaman Event & Kegiatan (`/event` & `/event/[slug]`) (PRD.md §6)**
+  - [x] Tab pemisah: **Event Mendatang (Upcoming)** vs **Arsip Event (Past)**
+  - [x] Kartu Event: Cover, badge tanggal, lokasi/link online, status badge (Lime Green = Upcoming, Gray = Past)
+  - [x] Halaman Detail Event: Jadwal lengkap, detail pembicara/pemateri, lokasi maps/tautan meeting, tombol pendaftaran eksternal/internal
+- [x] **2.7 Halaman Komunitas (`/komunitas` & `/komunitas/[slug]`) (PRD.md §6)**
+  - [x] Daftar komunitas minat/bakat di bawah naungan HIMA STIE 66
+  - [x] Profil komunitas: logo, deskripsi kegiatan, jadwal kumpul, dan kontak narahubung
+- [x] **2.8 Halaman Open Recruitment (`/oprec`) (PRD.md §6, desain.md §5.4)**
+  - [x] Hero banner mencolok bertema Yellow STIE 66
+  - [x] Komponen Countdown / Status aktif pendaftaran
+  - [x] Timeline tahapan seleksi (alur vertikal dengan dot indicator warna Lime Green)
+  - [x] Syarat & Ketentuan pendaftaran
+  - [x] Tombol CTA utama pendaftaran (link ke Google Form atau form pendaftaran)
+- [x] **2.9 Halaman Galeri Kegiatan (`/galeri`) (PRD.md §6)**
+  - [x] Grid album dokumentasi kegiatan mahasiswa
+  - [x] Modal/Lightbox viewer untuk preview foto beresolusi tinggi & embed video kegiatan
+- [x] **2.10 Halaman Kontak (`/kontak`) (PRD.md §6)**
+  - [x] Informasi alamat sekretariat kampus STIE 66 Kendari
+  - [x] Quick click to WhatsApp, Email resmi, dan akun media sosial
+  - [x] Embed Google Maps lokasi kampus
 
 ---
 
