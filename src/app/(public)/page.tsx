@@ -46,6 +46,7 @@ export default async function HomePage() {
             alt="Mahasiswa STIE 66 Kendari"
             fill
             priority
+            sizes="100vw"
             className="object-cover object-center opacity-30 scale-105 transition-transform duration-1000"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#1F2937] via-[#1F2937]/75 to-transparent" />

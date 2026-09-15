@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { requireAdminSession } from "@/lib/actions/auth";
 import type {
   Kabinet,
   OrgMember,
@@ -20,6 +21,7 @@ import type {
 
 export async function saveKabinet(data: Partial<Kabinet>) {
   try {
+    await requireAdminSession();
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
       return { success: true, message: "Berhasil disimpan (Mode Demo)" };
@@ -53,6 +55,7 @@ export async function saveKabinet(data: Partial<Kabinet>) {
 
 export async function deleteKabinet(id: string) {
   try {
+    await requireAdminSession();
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
     const { error } = await (supabase.from("kabinet") as any).delete().eq("id", id);
@@ -68,6 +71,7 @@ export async function deleteKabinet(id: string) {
 
 export async function saveOrgMember(data: Partial<OrgMember>) {
   try {
+    await requireAdminSession();
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
 
@@ -92,6 +96,7 @@ export async function saveOrgMember(data: Partial<OrgMember>) {
 
 export async function deleteOrgMember(id: string) {
   try {
+    await requireAdminSession();
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
     const { error } = await (supabase.from("org_member") as any).delete().eq("id", id);
@@ -111,6 +116,7 @@ export async function deleteOrgMember(id: string) {
 
 export async function saveNewsPost(data: Partial<NewsPost>) {
   try {
+    await requireAdminSession();
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
 
@@ -142,6 +148,7 @@ export async function saveNewsPost(data: Partial<NewsPost>) {
 
 export async function deleteNewsPost(id: string) {
   try {
+    await requireAdminSession();
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
     const { error } = await (supabase.from("news_post") as any).delete().eq("id", id);
@@ -162,6 +169,7 @@ export async function deleteNewsPost(id: string) {
 
 export async function saveEvent(data: Partial<EventItem>) {
   try {
+    await requireAdminSession();
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
 
@@ -193,6 +201,7 @@ export async function saveEvent(data: Partial<EventItem>) {
 
 export async function deleteEvent(id: string) {
   try {
+    await requireAdminSession();
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
     const { error } = await (supabase.from("event") as any).delete().eq("id", id);
@@ -213,6 +222,7 @@ export async function deleteEvent(id: string) {
 
 export async function saveCommunity(data: Partial<Community>) {
   try {
+    await requireAdminSession();
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
 
@@ -244,6 +254,7 @@ export async function saveCommunity(data: Partial<Community>) {
 
 export async function deleteCommunity(id: string) {
   try {
+    await requireAdminSession();
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
     const { error } = await (supabase.from("community") as any).delete().eq("id", id);
@@ -263,6 +274,7 @@ export async function deleteCommunity(id: string) {
 
 export async function saveRecruitment(data: Partial<RecruitmentPost>) {
   try {
+    await requireAdminSession();
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
 
@@ -291,6 +303,7 @@ export async function saveRecruitment(data: Partial<RecruitmentPost>) {
 
 export async function saveGalleryAlbum(data: Partial<GalleryAlbum>) {
   try {
+    await requireAdminSession();
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
 
@@ -314,6 +327,7 @@ export async function saveGalleryAlbum(data: Partial<GalleryAlbum>) {
 
 export async function deleteGalleryAlbum(id: string) {
   try {
+    await requireAdminSession();
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
     const { error } = await (supabase.from("gallery_album") as any).delete().eq("id", id);
@@ -329,6 +343,7 @@ export async function deleteGalleryAlbum(id: string) {
 
 export async function saveGalleryItem(data: Partial<GalleryItem>) {
   try {
+    await requireAdminSession();
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
 
@@ -352,6 +367,7 @@ export async function saveGalleryItem(data: Partial<GalleryItem>) {
 
 export async function deleteGalleryItem(id: string) {
   try {
+    await requireAdminSession();
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
     const { error } = await (supabase.from("gallery_item") as any).delete().eq("id", id);
@@ -371,6 +387,11 @@ export async function deleteGalleryItem(id: string) {
 
 export async function saveSiteSettings(key: string, value: any) {
   try {
+    const { admin } = await requireAdminSession();
+    if (admin.role !== "super_admin" && admin.role !== "editor") {
+      return { error: "Akun tidak memiliki hak untuk mengubah pengaturan situs." };
+    }
+
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
 
@@ -431,6 +452,11 @@ export async function getAdminUsers(): Promise<AdminUser[]> {
 
 export async function createAdminUser(data: { nama: string; email: string; role: string; password?: string }) {
   try {
+    const { admin } = await requireAdminSession();
+    if (admin.role !== "super_admin") {
+      return { error: "Hanya Super Admin yang dapat menambahkan akun admin." };
+    }
+
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
 
@@ -466,6 +492,11 @@ export async function createAdminUser(data: { nama: string; email: string; role:
 
 export async function updateAdminUser(id: string, data: Partial<Pick<AdminUser, "nama" | "role">>) {
   try {
+    const { admin } = await requireAdminSession();
+    if (admin.role !== "super_admin") {
+      return { error: "Hanya Super Admin yang dapat memperbarui akun admin." };
+    }
+
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
 
@@ -483,6 +514,11 @@ export async function updateAdminUser(id: string, data: Partial<Pick<AdminUser, 
 
 export async function deleteAdminUser(id: string) {
   try {
+    const { admin } = await requireAdminSession();
+    if (admin.role !== "super_admin") {
+      return { error: "Hanya Super Admin yang dapat menghapus akun admin." };
+    }
+
     const supabase = await createClient();
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { success: true };
 

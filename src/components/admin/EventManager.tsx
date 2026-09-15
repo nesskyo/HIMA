@@ -2,11 +2,11 @@
 
 import * as React from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { Plus, Edit2, Trash2, Calendar, MapPin, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -16,12 +16,28 @@ import {
 } from "@/components/ui/dialog";
 import type { EventItem } from "@/types/database.types";
 import { saveEvent, deleteEvent } from "@/lib/actions/admin";
+import { MediaUploader } from "@/components/admin/MediaUploader";
+
+// Dynamic import for Tiptap editor
+const TiptapEditor = dynamic(
+  () => import("@/components/admin/TiptapEditor").then((m) => m.TiptapEditor),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="border border-gray-200 rounded-2xl h-[200px] bg-gray-50 flex items-center justify-center text-xs text-gray-400">
+        Memuat editor deskripsi...
+      </div>
+    ),
+  }
+);
 
 export function EventManager({ initialEvents }: { initialEvents: EventItem[] }) {
   const [events, setEvents] = React.useState(initialEvents);
   const [modalOpen, setModalOpen] = React.useState(false);
   const [editingEvent, setEditingEvent] = React.useState<Partial<EventItem> | null>(null);
   const [loading, setLoading] = React.useState(false);
+  const [coverUrl, setCoverUrl] = React.useState("");
+  const [deskripsi, setDeskripsi] = React.useState("");
 
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,11 +46,11 @@ export function EventManager({ initialEvents }: { initialEvents: EventItem[] }) 
     const data: Partial<EventItem> = {
       id: editingEvent?.id,
       judul: fd.get("judul") as string,
-      deskripsi: fd.get("deskripsi") as string,
+      deskripsi: deskripsi,
       tanggal_mulai: new Date(fd.get("tanggal_mulai") as string).toISOString(),
       tanggal_selesai: new Date(fd.get("tanggal_selesai") as string).toISOString(),
       lokasi_atau_link: fd.get("lokasi_atau_link") as string,
-      cover_url: fd.get("cover_url") as string,
+      cover_url: coverUrl,
       link_pendaftaran: (fd.get("link_pendaftaran") as string) || null,
       status: (fd.get("status") as any) || "upcoming",
     };
@@ -89,6 +105,8 @@ export function EventManager({ initialEvents }: { initialEvents: EventItem[] }) 
           size="sm"
           onClick={() => {
             setEditingEvent(null);
+            setCoverUrl("");
+            setDeskripsi("");
             setModalOpen(true);
           }}
           className="rounded-xl font-bold text-xs"
@@ -128,9 +146,10 @@ export function EventManager({ initialEvents }: { initialEvents: EventItem[] }) 
                         <span className="font-bold text-[#1F2937] text-sm truncate block">
                           {ev.judul}
                         </span>
-                        <span className="text-[11px] text-[#6B7280] truncate block">
-                          {ev.deskripsi}
-                        </span>
+                        <div 
+                          className="text-[11px] text-[#6B7280] truncate block"
+                          dangerouslySetInnerHTML={{ __html: ev.deskripsi || "" }}
+                        />
                       </div>
                     </div>
                   </td>
@@ -171,6 +190,8 @@ export function EventManager({ initialEvents }: { initialEvents: EventItem[] }) 
                         size="icon-xs"
                         onClick={() => {
                           setEditingEvent(ev);
+                          setCoverUrl(ev.cover_url || "");
+                          setDeskripsi(ev.deskripsi || "");
                           setModalOpen(true);
                         }}
                         className="text-gray-600 hover:text-gray-900"
@@ -196,7 +217,7 @@ export function EventManager({ initialEvents }: { initialEvents: EventItem[] }) 
 
       {/* Edit / Add Event Modal */}
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="max-w-xl rounded-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl rounded-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-lg font-bold font-heading text-[#1F2937]">
               {editingEvent ? "Edit Agenda Event" : "Tambah Agenda Event Baru"}
@@ -270,12 +291,12 @@ export function EventManager({ initialEvents }: { initialEvents: EventItem[] }) 
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#1F2937]">URL Cover Banner</label>
-              <Input
-                name="cover_url"
-                defaultValue={editingEvent?.cover_url || ""}
-                placeholder="https://images.unsplash.com/..."
-                className="rounded-xl text-xs"
+              <MediaUploader
+                value={coverUrl}
+                onChange={(url) => setCoverUrl(url)}
+                bucket="cover-event"
+                label="Banner / Cover Event"
+                description="Upload gambar poster kegiatan (Format JPG/WebP)"
               />
             </div>
 
@@ -291,13 +312,10 @@ export function EventManager({ initialEvents }: { initialEvents: EventItem[] }) 
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-[#1F2937]">Deskripsi Rinci</label>
-              <Textarea
-                name="deskripsi"
-                rows={4}
-                required
-                defaultValue={editingEvent?.deskripsi || ""}
+              <TiptapEditor
+                content={deskripsi}
+                onChange={(html) => setDeskripsi(html)}
                 placeholder="Jelaskan tujuan, pembicara, dan target peserta..."
-                className="rounded-xl text-xs"
               />
             </div>
 

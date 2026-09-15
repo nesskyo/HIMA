@@ -1,6 +1,13 @@
 import { createClient } from "@/lib/supabase/client";
 
-export type StorageBucket = "cover-berita" | "foto-panitia" | "galeri" | "general";
+export type StorageBucket =
+  | "cover-berita"
+  | "cover-event"
+  | "foto-panitia"
+  | "galeri"
+  | "komunitas"
+  | "site-assets"
+  | "general";
 
 export interface UploadResult {
   url: string;

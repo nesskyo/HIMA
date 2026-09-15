@@ -6,6 +6,7 @@ import { ArrowLeft, Calendar, Clock, MapPin, ExternalLink, Sparkles, CheckCircle
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { getEventBySlug } from "@/lib/services/events";
+import { sanitizeHtml } from "@/lib/utils/sanitize-html";
 
 export const revalidate = 60; // Revalidate every 60 seconds (ISR)
 
@@ -150,9 +151,10 @@ export default async function EventDetailPage({ params }: Props) {
           <h2 className="text-2xl font-bold font-heading text-[#1F2937]">
             Tentang Kegiatan
           </h2>
-          <p className="whitespace-pre-line text-sm sm:text-base leading-relaxed">
-            {ev.deskripsi}
-          </p>
+          <div
+            className="prose prose-sm max-w-none [&>p]:mb-4 [&>ul]:list-disc [&>ul]:pl-5 [&>ol]:list-decimal [&>ol]:pl-5"
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(ev.deskripsi || "") }}
+          />
         </div>
 
         {/* CTA Register Button */}

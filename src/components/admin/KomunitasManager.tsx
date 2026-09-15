@@ -15,12 +15,14 @@ import {
 } from "@/components/ui/dialog";
 import type { Community } from "@/types/database.types";
 import { saveCommunity, deleteCommunity } from "@/lib/actions/admin";
+import { MediaUploader } from "@/components/admin/MediaUploader";
 
 export function KomunitasManager({ initialCommunities }: { initialCommunities: Community[] }) {
   const [communities, setCommunities] = React.useState(initialCommunities);
   const [modalOpen, setModalOpen] = React.useState(false);
   const [editingComm, setEditingComm] = React.useState<Partial<Community> | null>(null);
   const [loading, setLoading] = React.useState(false);
+  const [logoUrl, setLogoUrl] = React.useState("");
 
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,7 +32,7 @@ export function KomunitasManager({ initialCommunities }: { initialCommunities: C
       id: editingComm?.id,
       nama: fd.get("nama") as string,
       deskripsi: fd.get("deskripsi") as string,
-      logo_url: fd.get("logo_url") as string,
+      logo_url: logoUrl,
       urutan: Number(fd.get("urutan") || 1),
       kontak: JSON.stringify({
         instagram: fd.get("instagram") as string,
@@ -87,6 +89,7 @@ export function KomunitasManager({ initialCommunities }: { initialCommunities: C
           size="sm"
           onClick={() => {
             setEditingComm(null);
+            setLogoUrl("");
             setModalOpen(true);
           }}
           className="rounded-xl font-bold text-xs"
@@ -118,6 +121,7 @@ export function KomunitasManager({ initialCommunities }: { initialCommunities: C
                     size="icon-xs"
                     onClick={() => {
                       setEditingComm(item);
+                      setLogoUrl(item.logo_url || "");
                       setModalOpen(true);
                     }}
                   >
@@ -165,12 +169,12 @@ export function KomunitasManager({ initialCommunities }: { initialCommunities: C
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#1F2937]">URL Logo / Ikon</label>
-              <Input
-                name="logo_url"
-                defaultValue={editingComm?.logo_url || ""}
-                placeholder="https://images.unsplash.com/..."
-                className="rounded-xl text-xs"
+              <MediaUploader
+                value={logoUrl}
+                onChange={(url) => setLogoUrl(url)}
+                bucket="komunitas"
+                label="Logo Komunitas"
+                description="Upload logo komunitas (Format JPG/WebP)"
               />
             </div>
             <div className="grid grid-cols-2 gap-3">

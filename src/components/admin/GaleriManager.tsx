@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import type { GalleryAlbum, GalleryItem } from "@/types/database.types";
 import { saveGalleryAlbum, deleteGalleryAlbum, saveGalleryItem, deleteGalleryItem } from "@/lib/actions/admin";
+import { MediaUploader } from "@/components/admin/MediaUploader";
 
 export function GaleriManager({ initialAlbums }: { initialAlbums: GalleryAlbum[] }) {
   const [albums, setAlbums] = React.useState(initialAlbums);
@@ -25,8 +26,10 @@ export function GaleriManager({ initialAlbums }: { initialAlbums: GalleryAlbum[]
   // Modals
   const [albumModalOpen, setAlbumModalOpen] = React.useState(false);
   const [editingAlbum, setEditingAlbum] = React.useState<Partial<GalleryAlbum> | null>(null);
+  const [albumCoverUrl, setAlbumCoverUrl] = React.useState("");
 
   const [itemModalOpen, setItemModalOpen] = React.useState(false);
+  const [itemUrl, setItemUrl] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
   const handleSaveAlbum = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -37,7 +40,7 @@ export function GaleriManager({ initialAlbums }: { initialAlbums: GalleryAlbum[]
       id: editingAlbum?.id,
       judul: fd.get("judul") as string,
       deskripsi: fd.get("deskripsi") as string,
-      cover_url: fd.get("cover_url") as string,
+      cover_url: albumCoverUrl,
     };
 
     const res = await saveGalleryAlbum(data);
@@ -57,7 +60,7 @@ export function GaleriManager({ initialAlbums }: { initialAlbums: GalleryAlbum[]
     const fd = new FormData(e.currentTarget);
     const data: Partial<GalleryItem> = {
       album_id: activeAlbum?.id,
-      url: fd.get("url") as string,
+      url: itemUrl,
       tipe: (fd.get("tipe") as any) || "foto",
       caption: fd.get("caption") as string,
       urutan: Number(fd.get("urutan") || 1),
@@ -70,6 +73,7 @@ export function GaleriManager({ initialAlbums }: { initialAlbums: GalleryAlbum[]
     } else {
       toast.success("Media berhasil ditambahkan ke album!");
       setItemModalOpen(false);
+      setItemUrl("");
     }
   };
 
@@ -115,6 +119,7 @@ export function GaleriManager({ initialAlbums }: { initialAlbums: GalleryAlbum[]
             size="sm"
             onClick={() => {
               setEditingAlbum(null);
+              setAlbumCoverUrl("");
               setAlbumModalOpen(true);
             }}
             className="rounded-xl text-xs font-bold"
@@ -127,7 +132,10 @@ export function GaleriManager({ initialAlbums }: { initialAlbums: GalleryAlbum[]
             <Button
               variant="brand-lime"
               size="sm"
-              onClick={() => setItemModalOpen(true)}
+              onClick={() => {
+                setItemUrl("");
+                setItemModalOpen(true);
+              }}
               className="rounded-xl font-bold text-xs"
             >
               <Plus className="size-4 mr-1" />
@@ -150,6 +158,7 @@ export function GaleriManager({ initialAlbums }: { initialAlbums: GalleryAlbum[]
               size="xs"
               onClick={() => {
                 setEditingAlbum(activeAlbum);
+                setAlbumCoverUrl(activeAlbum.cover_url || "");
                 setAlbumModalOpen(true);
               }}
               className="text-xs"
@@ -209,12 +218,12 @@ export function GaleriManager({ initialAlbums }: { initialAlbums: GalleryAlbum[]
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#1F2937]">URL Cover Album</label>
-              <Input
-                name="cover_url"
-                defaultValue={editingAlbum?.cover_url || ""}
-                placeholder="https://images.unsplash.com/..."
-                className="rounded-xl text-xs"
+              <MediaUploader
+                value={albumCoverUrl}
+                onChange={(url) => setAlbumCoverUrl(url)}
+                bucket="galeri"
+                label="Cover Album"
+                description="Upload gambar sampul album (JPG/WebP)"
               />
             </div>
             <div className="space-y-1.5">
@@ -259,11 +268,21 @@ export function GaleriManager({ initialAlbums }: { initialAlbums: GalleryAlbum[]
               </select>
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#1F2937]">URL Gambar atau Video</label>
+              <MediaUploader
+                value={itemUrl}
+                onChange={(url) => setItemUrl(url)}
+                bucket="galeri"
+                label="Unggah Foto Kegiatan"
+                description="Upload dokumentasi (JPG/WebP)"
+              />
+              <p className="text-[10px] text-gray-400">
+                *Jika tipe Video, silakan masukkan URL secara manual di input di bawah (fitur upload video segera hadir)
+              </p>
               <Input
-                name="url"
-                required
-                placeholder="https://images.unsplash.com/... atau https://youtube.com/watch?v=..."
+                name="url_manual"
+                value={itemUrl}
+                onChange={(e) => setItemUrl(e.target.value)}
+                placeholder="https://youtube.com/watch?v=..."
                 className="rounded-xl text-xs"
               />
             </div>

@@ -11,6 +11,61 @@ const loginSchema = z.object({
   password: z.string().min(6, "Kata sandi minimal 6 karakter"),
 });
 
+export async function requireAdminSession() {
+  const supabase = await createClient();
+
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return {
+      user: null,
+      admin: {
+        id: "11111111-1111-1111-1111-111111111111",
+        nama: "Super Admin (Demo)",
+        email: "admin@himastie66.com",
+        role: "super_admin",
+        created_at: new Date().toISOString(),
+      } as AdminUser,
+    };
+  }
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    throw new Error("Sesi admin tidak valid. Silakan login kembali.");
+  }
+
+  const { data: adminProfile, error: profileErr } = await (supabase
+    .from("admin_user") as any)
+    .select("*")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (profileErr || !adminProfile) {
+    const fallbackRole = (user.user_metadata?.role as string | undefined) || "editor";
+    if (fallbackRole !== "super_admin" && fallbackRole !== "editor") {
+      throw new Error("Akun ini tidak memiliki hak akses administrator pengurus.");
+    }
+
+    return {
+      user,
+      admin: {
+        id: user.id,
+        nama: user.user_metadata?.nama || user.email?.split("@")[0] || "Admin",
+        email: user.email || "",
+        role: fallbackRole as "super_admin" | "editor",
+        created_at: user.created_at || new Date().toISOString(),
+      } as AdminUser,
+    };
+  }
+
+  return {
+    user,
+    admin: adminProfile as AdminUser,
+  };
+}
+
 export async function loginAdmin(prevState: any, formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;

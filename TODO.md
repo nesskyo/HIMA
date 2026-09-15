@@ -211,37 +211,37 @@ Implementasi fungsionalitas CRUD lengkap yang dirancang intuitif untuk pengurus 
 ## ⚡ Fase 5: Media Handling, Rich Text & Optimasi Performa
 Menjamin upload berkas berjalan lancar, gambar terkompresi, dan halaman memuat cepat.
 
-- [ ] **5.1 Komponen Reusable Media Uploader**
-  - [ ] Drag-and-drop file uploader dengan validasi tipe berkas (JPEG, PNG, WebP) dan batas ukuran (maks. 2MB)
-  - [ ] Kompresi gambar sisi klien sebelum upload (menghemat kuota Supabase Storage)
-  - [ ] Preview gambar sebelum dan sesudah upload dengan tombol hapus/ganti
-- [ ] **5.2 Setup Tiptap Rich Text Editor**
-  - [ ] Custom toolbar (Heading, Bold, Italic, Bullet List, Ordered List, Blockquote, Link, Code)
-  - [ ] Fitur sisip gambar langsung ke dalam artikel (otomatis upload ke bucket Supabase)
-  - [ ] Sanitasi HTML keluaran editor untuk mencegah celah XSS
-- [ ] **5.3 Optimasi Performa & Core Web Vitals (Target: LCP < 2.5s)**
-  - [ ] Terapkan Next.js `<Image />` dengan atribut `sizes`, format modern (WebP/AVIF), dan `priority` pada banner Hero
-  - [ ] Implementasi ISR (Incremental Static Regeneration) / Cache Revalidation pada halaman publik (`/berita`, `/event`, `/struktur`)
-  - [ ] Lazy loading untuk komponen modal galeri dan Tiptap editor
+- [x] **5.1 Komponen Reusable Media Uploader**
+  - [x] Drag-and-drop file uploader dengan validasi tipe berkas (JPEG, PNG, WebP) dan batas ukuran (maks. 2MB)
+  - [x] Kompresi gambar sisi klien sebelum upload (menghemat kuota Supabase Storage)
+  - [x] Preview gambar sebelum dan sesudah upload dengan tombol hapus/ganti
+- [x] **5.2 Setup Tiptap Rich Text Editor**
+  - [x] Custom toolbar (Heading, Bold, Italic, Bullet List, Ordered List, Blockquote, Link, Code)
+  - [x] Fitur sisip gambar langsung ke dalam artikel (otomatis upload ke bucket Supabase)
+  - [x] Sanitasi HTML keluaran editor untuk mencegah celah XSS
+- [x] **5.3 Optimasi Performa & Core Web Vitals (Target: LCP < 2.5s)**
+  - [x] Terapkan Next.js `<Image />` dengan atribut `sizes`, format modern (WebP/AVIF), dan `priority` pada banner Hero
+  - [x] Implementasi ISR (Incremental Static Regeneration) / Cache Revalidation pada halaman publik (`/berita`, `/event`, `/struktur`)
+  - [x] Lazy loading untuk komponen modal galeri dan Tiptap editor
 
 ---
 
 ## 🛡️ Fase 6: SEO, Open Graph & Keamanan
 Memastikan link website dapat dibagikan dengan rapi di grup WhatsApp / Instagram dan sistem aman.
 
-- [ ] **6.1 Metadata Dinamis & Open Graph (PRD.md §7)**
-  - [ ] Konfigurasi default metadata di `layout.tsx` (Title template: `%s | HIMA STIE 66 Kendari`, description, favicon)
-  - [ ] Dynamic Open Graph tags pada halaman detail berita (`/berita/[slug]`) dan event (`/event/[slug]`):
+- [x] **6.1 Metadata Dinamis & Open Graph (PRD.md §7)**
+  - [x] Konfigurasi default metadata di `layout.tsx` (Title template: `%s | HIMA STIE 66 Kendari`, description, favicon)
+  - [x] Dynamic Open Graph tags pada halaman detail berita (`/berita/[slug]`) dan event (`/event/[slug]`):
     - Judul berita sebagai `og:title`
     - Ringkasan sebagai `og:description`
     - Cover artikel sebagai `og:image` (gambar preview saat dibagikan ke WhatsApp)
-- [ ] **6.2 Sitemap & Robots**
-  - [ ] Buat `src/app/sitemap.ts` untuk generate otomatis daftar URL halaman publik
-  - [ ] Buat `src/app/robots.ts` (mengizinkan crawler untuk rute publik dan melarang indeks untuk rute `/admin/*`)
-- [ ] **6.3 Pengerasan Keamanan (Security Hardening)**
-  - [ ] Verifikasi bahwa API routes dan Server Actions memvalidasi sesi admin
-  - [ ] Proteksi CSRF & validasi skema input (Zod)
-  - [ ] Pastikan tidak ada environment variable privat (`SUPABASE_SERVICE_ROLE_KEY`) yang bocor ke browser bundle
+- [x] **6.2 Sitemap & Robots**
+  - [x] Buat `src/app/sitemap.ts` untuk generate otomatis daftar URL halaman publik
+  - [x] Buat `src/app/robots.ts` (mengizinkan crawler untuk rute publik dan melarang indeks untuk rute `/admin/*`)
+- [x] **6.3 Pengerasan Keamanan (Security Hardening)**
+  - [x] Verifikasi bahwa API routes dan Server Actions memvalidasi sesi admin
+  - [x] Proteksi CSRF & validasi skema input (Zod)
+  - [x] Pastikan tidak ada environment variable privat (`SUPABASE_SERVICE_ROLE_KEY`) yang bocor ke browser bundle
 
 ---
 

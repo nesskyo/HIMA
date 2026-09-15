@@ -42,6 +42,19 @@ export const metadata: Metadata = {
     title: "HIMA STIE 66 Kendari — Web Resmi & Portal Informasi",
     description:
       "Wadah aspirasi, kolaborasi, dan aktualisasi mahasiswa STIE 66 Kendari. Dapatkan info program kerja, berita, dan open recruitment terbaru.",
+    images: [{ url: "/globe.svg", width: 1200, height: 630, alt: "HIMA STIE 66 Kendari" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HIMA STIE 66 Kendari",
+    description:
+      "Website resmi HIMA STIE 66 Kendari untuk berita, event, komunitas, dan informasi mahasiswa.",
+    images: ["/globe.svg"],
+  },
+  icons: {
+    icon: "/globe.svg",
+    shortcut: "/globe.svg",
+    apple: "/globe.svg",
   },
 };
 
