@@ -307,6 +307,7 @@ export default async function HomePage() {
                     src={news.cover_url || "https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=800"}
                     alt={news.judul}
                     fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover transition-transform duration-300 hover:scale-105"
                   />
                   <div className="absolute top-3 left-3">

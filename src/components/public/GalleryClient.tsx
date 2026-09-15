@@ -54,6 +54,7 @@ export function GalleryClient({ albums }: { albums: GalleryAlbum[] }) {
                     src={item.url}
                     alt={item.caption || "Dokumentasi HIMA STIE 66"}
                     fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4 text-white">
@@ -104,6 +105,7 @@ export function GalleryClient({ albums }: { albums: GalleryAlbum[] }) {
                     src={selectedItem.url}
                     alt={selectedItem.caption || "Dokumentasi"}
                     fill
+                    sizes="100vw"
                     className="object-contain"
                   />
                 </div>

@@ -7,6 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { getEventBySlug } from "@/lib/services/events";
 
+export const revalidate = 60; // Revalidate every 60 seconds (ISR)
+
+export async function generateStaticParams() {
+  try {
+    const { getEvents } = await import("@/lib/services/events");
+    const events = await getEvents();
+    return events.map((ev) => ({ slug: ev.slug }));
+  } catch {
+    return [];
+  }
+}
+
 interface Props {
   params: Promise<{ slug: string }>;
 }
@@ -74,7 +86,14 @@ export default async function EventDetailPage({ params }: Props) {
         {/* Cover Image */}
         {ev.cover_url && (
           <div className="relative h-72 sm:h-96 w-full rounded-3xl overflow-hidden my-8 shadow-sm">
-            <Image src={ev.cover_url} alt={ev.judul} fill priority className="object-cover" />
+            <Image
+              src={ev.cover_url}
+              alt={ev.judul}
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 90vw, 896px"
+              className="object-cover"
+            />
           </div>
         )}
 

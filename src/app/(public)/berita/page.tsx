@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getPublishedNews } from "@/lib/services/news";
 
+export const revalidate = 60; // Revalidate every 60 seconds (ISR)
+
 export const metadata = {
   title: "Kabar & Berita Terkini",
   description: "Warta, siaran pers, dan dokumentasi kegiatan HIMA STIE 66 Kendari.",
@@ -96,6 +98,7 @@ export default async function BeritaPage({
                     src={item.cover_url || "https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=800"}
                     alt={item.judul}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                     className="object-cover transition-transform duration-300 hover:scale-105"
                   />
                   <div className="absolute top-3 left-3">

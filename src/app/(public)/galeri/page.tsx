@@ -1,6 +1,24 @@
-import { Sparkles, Camera } from "lucide-react";
+import dynamic from "next/dynamic";
+import { Camera } from "lucide-react";
 import { getGalleryAlbums } from "@/lib/services/gallery";
-import { GalleryClient } from "@/components/public/GalleryClient";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// Lazy-load the gallery client (lightbox + Dialog heavy component)
+const GalleryClient = dynamic(
+  () => import("@/components/public/GalleryClient").then((m) => m.GalleryClient),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton key={i} className="h-64 w-full rounded-2xl" />
+        ))}
+      </div>
+    ),
+  }
+);
+
+export const revalidate = 60; // ISR — revalidate every 60 seconds
 
 export const metadata = {
   title: "Galeri & Dokumentasi Kegiatan",

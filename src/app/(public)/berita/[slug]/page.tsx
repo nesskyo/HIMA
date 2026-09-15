@@ -5,6 +5,19 @@ import type { Metadata } from "next";
 import { ArrowLeft, Calendar, User, Share2, Tag, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getNewsBySlug, getPublishedNews } from "@/lib/services/news";
+import { sanitizeHtml } from "@/lib/utils/sanitize-html";
+
+export const revalidate = 60; // Revalidate every 60 seconds (ISR)
+
+export async function generateStaticParams() {
+  try {
+    const { getPublishedNews } = await import("@/lib/services/news");
+    const news = await getPublishedNews();
+    return news.map((item) => ({ slug: item.slug }));
+  } catch {
+    return [];
+  }
+}
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -94,6 +107,7 @@ export default async function NewsDetailPage({ params }: Props) {
               alt={news.judul}
               fill
               priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 90vw, 896px"
               className="object-cover"
             />
           </div>
@@ -101,8 +115,8 @@ export default async function NewsDetailPage({ params }: Props) {
 
         {/* Article Body */}
         <div
-          className="text-[#374151] leading-relaxed text-base space-y-4 pt-4 border-b border-gray-100 pb-10 [&>p]:mb-4 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:mt-6 [&>h2]:mb-3 [&>ul]:list-disc [&>ul]:pl-5 [&>ol]:list-decimal [&>ol]:pl-5"
-          dangerouslySetInnerHTML={{ __html: news.konten }}
+          className="text-[#374151] leading-relaxed text-base space-y-4 pt-4 border-b border-gray-100 pb-10 [&>p]:mb-4 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:mt-6 [&>h2]:mb-3 [&>ul]:list-disc [&>ul]:pl-5 [&>ol]:list-decimal [&>ol]:pl-5 [&>img]:rounded-2xl [&>img]:my-6 [&>img]:shadow-sm"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(news.konten) }}
         />
 
         {/* Share Section */}

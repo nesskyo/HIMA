@@ -4,6 +4,8 @@ import { InstagramIcon, LinkedinIcon } from "@/components/shared/SocialIcons";
 import { getActiveKabinet, getAllKabinets } from "@/lib/services/kabinet";
 import type { OrgMember } from "@/types/database.types";
 
+export const revalidate = 60; // Revalidate every 60 seconds (ISR)
+
 export const metadata = {
   title: "Struktur Organisasi",
   description:
@@ -90,6 +92,7 @@ export default async function StrukturPage() {
                     src={member.foto_url || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=500"}
                     alt={member.nama}
                     fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
                     className="object-cover object-top hover:scale-105 transition-transform duration-300"
                   />
                 </div>
@@ -155,6 +158,7 @@ export default async function StrukturPage() {
                     src={member.foto_url || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=500"}
                     alt={member.nama}
                     fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
                     className="object-cover object-top hover:scale-105 transition-transform duration-300"
                   />
                 </div>

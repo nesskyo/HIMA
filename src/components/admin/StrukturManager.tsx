@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import type { Kabinet, OrgMember } from "@/types/database.types";
 import { saveKabinet, deleteKabinet, saveOrgMember, deleteOrgMember } from "@/lib/actions/admin";
+import { MediaUploader } from "@/components/admin/MediaUploader";
 
 interface StrukturManagerProps {
   initialKabinets: Kabinet[];
@@ -36,6 +37,7 @@ export function StrukturManager({ initialKabinets, initialMembers }: StrukturMan
 
   const [memberModalOpen, setMemberModalOpen] = React.useState(false);
   const [editingMember, setEditingMember] = React.useState<Partial<OrgMember> | null>(null);
+  const [memberPhotoUrl, setMemberPhotoUrl] = React.useState("");
 
   const [loading, setLoading] = React.useState(false);
 
@@ -78,7 +80,7 @@ export function StrukturManager({ initialKabinets, initialMembers }: StrukturMan
       nama: fd.get("nama") as string,
       jabatan: fd.get("jabatan") as string,
       badan: fd.get("badan") as string,
-      foto_url: (fd.get("foto_url") as string) || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=500",
+      foto_url: memberPhotoUrl || (fd.get("foto_url") as string) || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=500",
       urutan: Number(fd.get("urutan") || 1),
       kontak_sosmed: {
         instagram: fd.get("instagram") as string,
@@ -177,6 +179,7 @@ export function StrukturManager({ initialKabinets, initialMembers }: StrukturMan
             size="sm"
             onClick={() => {
               setEditingMember(null);
+              setMemberPhotoUrl("");
               setMemberModalOpen(true);
             }}
             className="rounded-xl font-bold text-xs"
@@ -219,6 +222,7 @@ export function StrukturManager({ initialKabinets, initialMembers }: StrukturMan
                   size="icon-xs"
                   onClick={() => {
                     setEditingMember(member);
+                    setMemberPhotoUrl(member.foto_url || "");
                     setMemberModalOpen(true);
                   }}
                   className="text-gray-500 hover:text-gray-900"
@@ -355,15 +359,15 @@ export function StrukturManager({ initialKabinets, initialMembers }: StrukturMan
                 />
               </div>
             </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#1F2937]">URL Foto Pengurus</label>
-              <Input
-                name="foto_url"
-                defaultValue={editingMember?.foto_url || ""}
-                placeholder="https://... atau path storage"
-                className="rounded-xl text-xs"
-              />
-            </div>
+            {/* Pas Foto Profil with MediaUploader */}
+            <MediaUploader
+              value={memberPhotoUrl}
+              onChange={(url) => setMemberPhotoUrl(url)}
+              bucket="foto-panitia"
+              aspectRatio="3/4"
+              label="Pas Foto Profil Pengurus"
+              description="Format JPG, PNG, atau WebP (Rasio 3:4 pas foto resmi)"
+            />
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-[#1F2937]">Link Instagram</label>

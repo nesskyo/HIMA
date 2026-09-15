@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { getEvents } from "@/lib/services/events";
 
+export const revalidate = 60; // Revalidate every 60 seconds (ISR)
+
 export const metadata = {
   title: "Agenda & Arsip Event",
   description: "Daftar kegiatan, seminar, pelatihan, dan arsip event HIMA STIE 66 Kendari.",
@@ -84,6 +86,7 @@ export default async function EventPage({
                       src={ev.cover_url || "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=800"}
                       alt={ev.judul}
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                       className="object-cover"
                     />
                     <div className="absolute top-3 left-3">

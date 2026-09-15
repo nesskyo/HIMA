@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { Plus, Edit2, Trash2, Search, Eye, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,20 @@ import {
 } from "@/components/ui/dialog";
 import type { NewsPost } from "@/types/database.types";
 import { saveNewsPost, deleteNewsPost } from "@/lib/actions/admin";
+import { MediaUploader } from "@/components/admin/MediaUploader";
+
+// Dynamic import for Tiptap editor (client-side only for better performance)
+const TiptapEditor = dynamic(
+  () => import("@/components/admin/TiptapEditor").then((m) => m.TiptapEditor),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="border border-gray-200 rounded-2xl h-[260px] bg-gray-50 flex items-center justify-center text-xs text-gray-400">
+        Memuat editor artikel...
+      </div>
+    ),
+  }
+);
 
 export function BeritaManager({ initialNews }: { initialNews: NewsPost[] }) {
   const [newsList, setNewsList] = React.useState(initialNews);
@@ -25,12 +40,30 @@ export function BeritaManager({ initialNews }: { initialNews: NewsPost[] }) {
   const [editingPost, setEditingPost] = React.useState<Partial<NewsPost> | null>(null);
   const [loading, setLoading] = React.useState(false);
 
+  // Rich editor and media states
+  const [coverUrl, setCoverUrl] = React.useState("");
+  const [kontenHtml, setKontenHtml] = React.useState("");
+
   const filteredNews = newsList.filter((item) => {
     const matchesSearch = item.judul.toLowerCase().includes(search.toLowerCase());
     const matchesCategory =
       categoryFilter === "Semua" || item.kategori.toLowerCase() === categoryFilter.toLowerCase();
     return matchesSearch && matchesCategory;
   });
+
+  const handleOpenAdd = () => {
+    setEditingPost(null);
+    setCoverUrl("");
+    setKontenHtml("<p>Tulis artikel lengkap di sini...</p>");
+    setModalOpen(true);
+  };
+
+  const handleOpenEdit = (post: NewsPost) => {
+    setEditingPost(post);
+    setCoverUrl(post.cover_url || "");
+    setKontenHtml(post.konten || "<p>Tulis artikel lengkap di sini...</p>");
+    setModalOpen(true);
+  };
 
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,9 +73,9 @@ export function BeritaManager({ initialNews }: { initialNews: NewsPost[] }) {
       id: editingPost?.id,
       judul: fd.get("judul") as string,
       kategori: fd.get("kategori") as string,
-      cover_url: fd.get("cover_url") as string,
+      cover_url: coverUrl,
       ringkasan: fd.get("ringkasan") as string,
-      konten: fd.get("konten") as string,
+      konten: kontenHtml,
       status: (fd.get("status") as any) || "published",
       published_at: fd.get("status") === "published" ? new Date().toISOString() : null,
     };
@@ -116,87 +149,101 @@ export function BeritaManager({ initialNews }: { initialNews: NewsPost[] }) {
           <Button
             variant="brand-lime"
             size="sm"
-            onClick={() => {
-              setEditingPost(null);
-              setModalOpen(true);
-            }}
-            className="rounded-xl font-bold text-xs shrink-0"
+            onClick={handleOpenAdd}
+            className="rounded-xl text-xs font-bold gap-1.5 shrink-0"
           >
-            <Plus className="size-4 mr-1.5" />
+            <Plus className="size-4" />
             Tulis Berita
           </Button>
         </div>
       </div>
 
       {/* News Table */}
-      <div className="bg-white rounded-3xl border border-gray-200/80 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-gray-50 border-b border-gray-200 text-[#6B7280] font-bold uppercase tracking-wider">
-              <tr>
-                <th className="py-3.5 px-6">Berita</th>
-                <th className="py-3.5 px-4">Kategori</th>
-                <th className="py-3.5 px-4">Status</th>
-                <th className="py-3.5 px-4">Tanggal</th>
-                <th className="py-3.5 px-6 text-right">Aksi</th>
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="bg-gray-50 border-b border-gray-100 text-[#6B7280] font-semibold">
+                <th className="p-4 pl-6">Artikel</th>
+                <th className="p-4">Kategori</th>
+                <th className="p-4">Status</th>
+                <th className="p-4">Tanggal Rilis</th>
+                <th className="p-4 pr-6 text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {filteredNews.map((item) => (
-                <tr key={item.id} className="hover:bg-gray-50/50 transition-colors">
-                  <td className="py-4 px-6">
+              {filteredNews.map((post) => (
+                <tr key={post.id} className="hover:bg-gray-50/50 transition-colors">
+                  <td className="p-4 pl-6">
                     <div className="flex items-center gap-3 max-w-md">
-                      <div className="size-12 rounded-xl bg-gray-100 relative overflow-hidden shrink-0">
-                        <Image
-                          src={item.cover_url || "https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=300"}
-                          alt={item.judul}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="truncate">
-                        <span className="font-bold text-[#1F2937] text-sm truncate block">
-                          {item.judul}
-                        </span>
-                        <span className="text-[11px] text-[#6B7280] truncate block">
-                          {item.ringkasan || "Tidak ada ringkasan"}
-                        </span>
+                      {post.cover_url ? (
+                        <div className="relative size-12 rounded-xl overflow-hidden shrink-0 border border-gray-100">
+                          <Image
+                            src={post.cover_url}
+                            alt={post.judul}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="size-12 rounded-xl bg-gray-100 flex items-center justify-center shrink-0 text-gray-400">
+                          📰
+                        </div>
+                      )}
+                      <div>
+                        <div className="font-bold text-[#1F2937] line-clamp-1">{post.judul}</div>
+                        <div className="text-[11px] text-gray-400 line-clamp-1 mt-0.5">
+                          {post.ringkasan || "Tidak ada ringkasan..."}
+                        </div>
                       </div>
                     </div>
                   </td>
-                  <td className="py-4 px-4 font-semibold text-[#1F2937]">{item.kategori}</td>
-                  <td className="py-4 px-4">
-                    {item.status === "published" ? (
-                      <Badge className="bg-[#84CC16] hover:bg-[#65A30D] text-white text-[10px]">
-                        Published
-                      </Badge>
-                    ) : (
-                      <Badge variant="secondary" className="text-[10px]">
-                        Draft
-                      </Badge>
-                    )}
+
+                  <td className="p-4">
+                    <Badge variant="outline" className="text-[10px] font-semibold">
+                      {post.kategori}
+                    </Badge>
                   </td>
-                  <td className="py-4 px-4 text-[#6B7280]">
-                    {new Date(item.published_at || item.created_at).toLocaleDateString("id-ID")}
+
+                  <td className="p-4">
+                    <span
+                      className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                        post.status === "published"
+                          ? "bg-[#84CC16]/10 text-[#65a30d]"
+                          : "bg-gray-100 text-gray-600"
+                      }`}
+                    >
+                      {post.status === "published" ? "Tayang" : "Draf"}
+                    </span>
                   </td>
-                  <td className="py-4 px-6 text-right">
-                    <div className="inline-flex items-center gap-1">
+
+                  <td className="p-4 text-gray-500">
+                    {post.published_at
+                      ? new Date(post.published_at).toLocaleDateString("id-ID", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })
+                      : "-"}
+                  </td>
+
+                  <td className="p-4 pr-6 text-right">
+                    <div className="flex items-center justify-end gap-1.5">
                       <Button
-                        variant="ghost"
-                        size="icon-xs"
-                        onClick={() => {
-                          setEditingPost(item);
-                          setModalOpen(true);
-                        }}
-                        className="text-gray-600 hover:text-gray-900"
+                        variant="outline"
+                        size="xs"
+                        onClick={() => handleOpenEdit(post)}
+                        className="rounded-lg h-7 w-7 p-0"
+                        title="Edit Berita"
                       >
-                        <Edit2 className="size-3.5" />
+                        <Edit2 className="size-3" />
                       </Button>
                       <Button
-                        variant="ghost"
-                        size="icon-xs"
-                        onClick={() => handleDelete(item.id)}
-                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                        variant="outline"
+                        size="xs"
+                        onClick={() => handleDelete(post.id)}
+                        className="rounded-lg h-7 w-7 p-0 text-rose-500 hover:text-rose-600 hover:bg-rose-50 border-rose-100"
+                        title="Hapus Berita"
                       >
                         <Trash2 className="size-3.5" />
                       </Button>
@@ -211,7 +258,7 @@ export function BeritaManager({ initialNews }: { initialNews: NewsPost[] }) {
 
       {/* Edit / Create News Dialog */}
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="max-w-2xl rounded-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl rounded-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-lg font-bold font-heading text-[#1F2937]">
               {editingPost ? "Edit Artikel Berita" : "Tulis Artikel Berita Baru"}
@@ -257,15 +304,15 @@ export function BeritaManager({ initialNews }: { initialNews: NewsPost[] }) {
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#1F2937]">URL Cover Gambar</label>
-              <Input
-                name="cover_url"
-                defaultValue={editingPost?.cover_url || ""}
-                placeholder="https://images.unsplash.com/... atau tautan bucket"
-                className="rounded-xl text-xs"
-              />
-            </div>
+            {/* Media Uploader with client-side compression */}
+            <MediaUploader
+              value={coverUrl}
+              onChange={(url) => setCoverUrl(url)}
+              bucket="cover-berita"
+              aspectRatio="16/9"
+              label="Cover Gambar Berita"
+              description="Rekomendasi rasio 16:9 (JPG, PNG, atau WebP maks. 2MB)"
+            />
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-[#1F2937]">Ringkasan Singkat (Excerpt)</label>
@@ -273,20 +320,17 @@ export function BeritaManager({ initialNews }: { initialNews: NewsPost[] }) {
                 name="ringkasan"
                 rows={2}
                 defaultValue={editingPost?.ringkasan || ""}
-                placeholder="Ringkasan 1-2 kalimat untuk preview di kartu..."
+                placeholder="Ringkasan 1-2 kalimat untuk preview di kartu beranda/katalog..."
                 className="rounded-xl text-xs"
               />
             </div>
 
+            {/* Tiptap Rich Text Editor */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#1F2937]">Konten Berita Lengkap (HTML)</label>
-              <Textarea
-                name="konten"
-                rows={8}
-                required
-                defaultValue={editingPost?.konten || "<p>Tulis artikel lengkap di sini...</p>"}
-                placeholder="<p>Paragraf artikel...</p>"
-                className="rounded-xl text-xs font-mono"
+              <label className="text-xs font-bold text-[#1F2937]">Konten Berita Lengkap</label>
+              <TiptapEditor
+                content={kontenHtml}
+                onChange={(html) => setKontenHtml(html)}
               />
             </div>
 
