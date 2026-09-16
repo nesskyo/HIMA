@@ -17,11 +17,16 @@ export function LoginForm() {
     setLoading(true);
     setErrorMessage(null);
 
-    const formData = new FormData(e.currentTarget);
-    const result = await loginAdmin(null, formData);
+    try {
+      const formData = new FormData(e.currentTarget);
+      const result = await loginAdmin(null, formData);
 
-    if (result?.error) {
-      setErrorMessage(result.error);
+      if (result?.error) {
+        setErrorMessage(result.error);
+      }
+    } catch {
+      setErrorMessage("Login gagal diproses. Periksa environment Supabase di Vercel lalu coba lagi.");
+    } finally {
       setLoading(false);
     }
   }

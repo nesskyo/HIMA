@@ -77,8 +77,6 @@ export async function loginAdmin(prevState: any, formData: FormData) {
     };
   }
 
-  const supabase = await createClient();
-
   // If Supabase credentials are not yet set in environment, support demo admin bypass
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     if (email === "admin@himastie66.com" && password === "password123") {
@@ -88,6 +86,8 @@ export async function loginAdmin(prevState: any, formData: FormData) {
       error: "Kredensial demo: admin@himastie66.com / password123 (atau isi .env.local untuk live Supabase).",
     };
   }
+
+  const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
